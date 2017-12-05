@@ -12,6 +12,8 @@ var current_min; // 현재 시각 '분'
 var sub_min; // 촬영 시작 전 시간
 var camera_interval; // camera 모듈 반복 제어
 
+/*
+
 //설정 및 촬영 소켓 모듈
 var socket2 = require('socket.io-client')('http://13.124.28.87:3000');
 
@@ -29,10 +31,10 @@ var client = mqtt.connect('mqtt://13.124.28.87'); // mqtt 서버 접속
 var http = require('http'); // http socket
 var delivery; // delivery 전역 설정
 var temp = {}; //소켓통신으로 이미지 파일을 서버로 전송
-
 //관수 모듈//
 var GPIO = require('onoff').Gpio;
 var onoffcontroller = new GPIO(21, 'out');
+*/
 
 //수분 측정 모듈//
 var SerialPort = require('serialport'); //아두이노와 시리얼 통신할 수 있는 모듈
@@ -223,6 +225,7 @@ parser.on('data', function(data) {
       insert_url += 'user_token=' + user_token;
       insert_url += '&api_key=' + api_key;
       insert_url += '&sv_sensor1=' + sensorObj;
+
   http.post(insert_url, (resp) => {
     let data = '';
     // A chunk of data has been recieved.
