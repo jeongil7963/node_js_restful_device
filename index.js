@@ -7,7 +7,7 @@ http.post = require('http-post');
 var config = require('./config.json');
 var water_stop_time = config.water_stop_time; // water_stop_time 값 설정
 var shooting_time = config.shooting_time; //shooting time 값 설정
-
+var JSON = require('json');
 var current_min; // 현재 시각 '분'
 var sub_min; // 촬영 시작 전 시간
 var camera_interval; // camera 모듈 반복 제어
