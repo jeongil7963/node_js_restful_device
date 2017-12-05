@@ -20,7 +20,7 @@ http.post('http://192.168.0.6:3000/setting/search', { "user_token" : user_token,
 			water_stop_time = resObj.ras_watering_operatingtime;
 			shooting_time = resObj.ras_camera_operatingtime;
 		}else{
-			console.log(user_token or api_key are wrong);
+			console.log('user_token or api_key are wrong');
 		}
 	});
 });
