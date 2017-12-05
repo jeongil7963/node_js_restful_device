@@ -1,6 +1,6 @@
 //user_token
 var user_token = '839ca2c5d60342309677f6f65ffc809c'
-var api_key = '58a7ff45425f4d6d809c023ee1790aa2'
+var api_key = '58a7ff45425f4d6d809c023ee1790aa'
 
 var http = require('http');
 http.post = require('http-post');
