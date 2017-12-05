@@ -221,23 +221,16 @@ port.on('error', function(err) {
 parser.on('data', function(data) {
   console.log('Read and Send Data : ' + data);
   var sensorObj = data.toString(); // json 형식 data를 객체형식으로 저장
-  var insert_url = 'http://192.168.0.6:3000/insert';
-      insert_url += '?user_token=' + user_token;
-      insert_url += '&api_key=' + api_key;
-      insert_url += '&sv_sensor1=' + sensorObj;
-
-  http.get(insert_url, (resp) => {
-    let data = '';
-    // A chunk of data has been recieved.
-    resp.on('data', (chunk) => {
-      data += chunk;
+  http.post('http://192.168.0.6:3000/insert', {
+    "user_token": user_token,
+    "api_key": api_key,
+    "sv_sensor1": sensorObj
+  }, function(res) {
+    res.setEncoding('utf8');
+    res.on('data', function(res) {
+      var resObj = JSON.parse(res);
+      console.log(resObj);
     });
-    // The whole response has been received. Print out the result.
-    resp.on('end', () => {
-      //console.log(JSON.parse(data).explanation);
-    });
-  }).on("error", (err) => {
-    console.log("Error: " + err.message);
   });
 });
 
