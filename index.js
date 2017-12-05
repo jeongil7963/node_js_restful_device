@@ -20,8 +20,7 @@ http.post('http://192.168.0.6:3000/setting/search', { "user_token" : user_token,
 		var resObj = JSON.parse(res);
 		water_stop_time = res.ras_watering_operatingtime;
 		shooting_time = res.ras_camera_operatingtime;
+		console.log(water_stop_time);
+		console.log(shooting_time);
 	});
 });
-
-console.log(water_stop_time);
-console.log(shooting_time);
