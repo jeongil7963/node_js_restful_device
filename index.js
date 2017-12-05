@@ -238,6 +238,8 @@ parser.on('data', function(data) {
   });
 });
 
+/*
+
 // 설정 버튼, 사용자 카메라 촬영
 // 소켓 연결
 socket2.on('connect', function() {
@@ -266,3 +268,5 @@ socket2.on(field_id, function(data) {
 socket2.on('disconnect', function() {
   console.log('socket2 disconnected');
 });
+
+*/
