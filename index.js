@@ -226,7 +226,7 @@ parser.on('data', function(data) {
       insert_url += '&api_key=' + api_key;
       insert_url += '&sv_sensor1=' + sensorObj;
 
-  http.post(insert_url, (resp) => {
+  http.get(insert_url, (resp) => {
     let data = '';
     // A chunk of data has been recieved.
     resp.on('data', (chunk) => {
