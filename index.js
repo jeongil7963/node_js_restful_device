@@ -207,39 +207,32 @@ function watering_stop() {
 
 // 수분 측정
 port.pipe(parser);
-
 //포트 열기
 port.on('open', function() {
   console.log('port open');
 });
-
-// open errors will be emitted as an error event
+//포트 열기 에러 처리
 port.on('error', function(err) {
   console.log('Error: ', err.message);
 });
-
+//측정 데이터 보내기
 parser.on('data', function(data) {
   console.log('Read and Send Data : ' + data);
-
   var sensorObj = data.toString(); // json 형식 data를 객체형식으로 저장
-  var insert_url = 'http://localhost:3000/insert?'
-  insert_url += 'user_token=' + user_token
-  insert_url += '&api_key=' + api_key
-  insert_url += '&sv_sensor1=' + sensorObj;
-  
+  var insert_url = 'http://localhost:3000/insert?';
+      insert_url += 'user_token=' + user_token;
+      insert_url += '&api_key=' + api_key;
+      insert_url += '&sv_sensor1=' + sensorObj;
   http.post(insert_url, (resp) => {
     let data = '';
-
     // A chunk of data has been recieved.
     resp.on('data', (chunk) => {
       data += chunk;
     });
-
     // The whole response has been received. Print out the result.
     resp.on('end', () => {
       //console.log(JSON.parse(data).explanation);
     });
-
   }).on("error", (err) => {
     console.log("Error: " + err.message);
   });
