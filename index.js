@@ -43,7 +43,7 @@ var parser = new parsers.Readline({
 
 //라즈베리파이와 연결된 디바이스 주소
 var port = new SerialPort('/dev/ttyACM0', {
-  baudrate: 9600
+  baudRate: 9600
 });
 
 // user_token, api_key 유효성 검사
