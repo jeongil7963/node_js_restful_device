@@ -221,8 +221,8 @@ port.on('error', function(err) {
 parser.on('data', function(data) {
   console.log('Read and Send Data : ' + data);
   var sensorObj = data.toString(); // json 형식 data를 객체형식으로 저장
-  var insert_url = 'http://192.168.0.6:3000/insert?';
-      insert_url += 'user_token=' + user_token;
+  var insert_url = 'http://192.168.0.6:3000/insert';
+      insert_url += '?user_token=' + user_token;
       insert_url += '&api_key=' + api_key;
       insert_url += '&sv_sensor1=' + sensorObj;
 
