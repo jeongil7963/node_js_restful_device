@@ -15,10 +15,13 @@ var camera_interval; // camera 모듈 반복 제어
 
 http.post('http://192.168.0.6:3000/setting/search', { "user_token" : user_token, "api_key" : api_key }, function(res){
 	res.setEncoding('utf8');
-	res.on('data', function(chunk) {
-		console.log(chunk);
+	res.on('data', function(res) {
+		console.log(res);
+		var resObj = JSON.parse(res);
+		water_stop_time = res.ras_watering_operatingtime;
+		shooting_time = res.ras_camera_operatingtime;
 	});
 });
 
-console.log("water_stop_time : " + water_stop_time);
-console.log("shooting_time : " + shooting_time);
+console.log(water_stop_time);
+console.log(shooting_time);
