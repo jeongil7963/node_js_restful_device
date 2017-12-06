@@ -87,7 +87,7 @@ function rederection() {
         console.log(resObj);
         water_stop_time = resObj.ras_watering_operatingtime;
         shooting_time = resObj.ras_camera_operatingtime;
-        //module_start();
+        module_start();
       } else {
         console.log('user_token or api_key are wrong');
       }
