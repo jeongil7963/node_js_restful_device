@@ -247,7 +247,7 @@ socket2.on('chat', function(data) {
   }
   //데이터베이스 설정 재연결
   else {
-    console.log('web_socket : ' + data);
+    console.log('web_socket : ' + data.msg + data.token);
     if (camera_interval != null) {
       clearInterval(camera_interval);
 
