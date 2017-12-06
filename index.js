@@ -140,21 +140,22 @@ function camera_setting(){
         timeInMs = moment().format('YYYYMMDDHHmmss');
         photo_path = __dirname + "/images/" + timeInMs + ".jpg";
         cmd_photo = 'raspistill -vf -t 1 -w 600 -h 420 -o ' + photo_path;
-        callback(null);
+        callback(null, '1');
       },
-      function(callback) {
+      function(arg, callback ) {
         exec_photo(cmd_photo, function(err, stdout, stderr) {
           if (err) {
             console.log('child process exited with shooting_photo error code', err.code);
             return;
           }
           console.log("photo captured with filename: " + timeInMs);
+          callback(null, '2');
         });
-        callback(null);
       },
-      function(callback) {
+      function(arg, callback) {
         console.log("image trnasmit function call")
-      },
+        callback(null, '3');
+      }
     ],
     function(err, result) {
       if(err){
