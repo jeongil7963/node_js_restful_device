@@ -64,11 +64,11 @@ http.post('http://192.168.0.6:3000/setting/search', {
       console.log(resObj);
       water_stop_time = resObj.ras_watering_operatingtime;
       shooting_time = resObj.ras_camera_operatingtime;
-      //module_start();
+      module_start();
+      console.console.log("camera_start");
     } else {
       console.log('user_token or api_key are wrong');
     }
-
   });
 });
 
@@ -94,7 +94,6 @@ function rederection() {
     });
   });
 }
-
 
 //카메라 모듈 시작
 function module_start() {
