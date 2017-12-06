@@ -239,7 +239,7 @@ socket2.on('connect', function() {
   console.log('socket2 connected');
 });
 
-socket2.on(field_id, function(data) {
+socket2.on('chat', function(data) {
   //shoot일 때 카메라 직접 촬영
   if (data == "shoot") {
     console.log('client camera shoot');
