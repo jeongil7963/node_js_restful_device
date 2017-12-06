@@ -15,9 +15,8 @@ var camera_interval; // camera 모듈 반복 제어
 
 var async = require('async');
 
-
 //설정 및 촬영 소켓 모듈
-var socket2 = require('socket.io-client')('http://13.124.28.87:3000');
+//var socket2 = require('socket.io-client')('http://13.124.28.87:3000');
 
 //카메라 사용자 촬영 설정
 var timeInMs;
@@ -25,14 +24,14 @@ var exec_photo = require('child_process').exec;
 var photo_path;
 var cmd_photo;
 
-var socket = require('socket.io-client')('http://13.124.28.87:5001'); // 소켓서버에 연결
-var dl = require('delivery'); // 파일 전송 모듈
+//var socket = require('socket.io-client')('http://13.124.28.87:5001'); // 소켓서버에 연결
+//var dl = require('delivery'); // 파일 전송 모듈
 var moment = require('moment'); // moment 시간 모듈
-var mqtt = require('mqtt'); // mqtt 모듈
-var client = mqtt.connect('mqtt://13.124.28.87'); // mqtt 서버 접속
-var http = require('http'); // http socket
-var delivery; // delivery 전역 설정
-var temp = {}; //소켓통신으로 이미지 파일을 서버로 전송
+//var mqtt = require('mqtt'); // mqtt 모듈
+//var client = mqtt.connect('mqtt://13.124.28.87'); // mqtt 서버 접속
+//var http = require('http'); // http socket
+//var delivery; // delivery 전역 설정
+//var temp = {}; //소켓통신으로 이미지 파일을 서버로 전송
 
 //관수 모듈
 var GPIO = require('onoff').Gpio;
@@ -115,7 +114,7 @@ function module_start() {
   }, 1000 * 60 * sub_min); // 제한된 시간 후에 촬영 시작
 };
 
-
+/*
 //소켓 연결 및 전송 모듈 설정
 socket.on('connect', function() {
   console.log("Socket1 connected");
@@ -128,7 +127,7 @@ socket.on('connect', function() {
     });
   });
 });
-
+*/
 
 // 카메라 설정 시간 간격 마다 촬영 실행
 function camera_starting() {
@@ -157,15 +156,8 @@ function camera_setting(){
         callback(null, 'camera_shooting_complete');
       },
       function(callback) {
-        console.log(arg1)
-        delivery.send({
-          name: timeInMs,
-          path: __dirname + '/images/' + timeInMs + ".jpg",
-          params: {
-            channel: field_id,
-            img_name: timeInMs + ".jpg"
-          }
-        });
+        console.log("image trnasmit function call")
+
       },
     ],
     function(err, result) {
@@ -173,6 +165,7 @@ function camera_setting(){
     });
 }
 
+/*
 // 관수
 // MQTT pub/sub
 client.on('connect', function() {
@@ -210,7 +203,7 @@ function watering_stop() {
     onoffcontroller.writeSync(0);
   }, water_stop_time * 1000);
 };
-
+*/
 
 // 수분 측정
 port.pipe(parser);
@@ -239,6 +232,7 @@ parser.on('data', function(data) {
   });
 });
 
+/*
 // 설정 버튼, 사용자 카메라 촬영
 // 소켓 연결
 socket2.on('connect', function() {
@@ -267,3 +261,4 @@ socket2.on(field_id, function(data) {
 socket2.on('disconnect', function() {
   console.log('socket2 disconnected');
 });
+*/
