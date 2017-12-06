@@ -173,8 +173,6 @@ function camera_setting(){
     });
 }
 
-/*
-
 // 관수
 // MQTT pub/sub
 client.on('connect', function() {
@@ -212,7 +210,7 @@ function watering_stop() {
     onoffcontroller.writeSync(0);
   }, water_stop_time * 1000);
 };
-*/
+
 
 // 수분 측정
 port.pipe(parser);
