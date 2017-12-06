@@ -239,7 +239,7 @@ socket2.on('connect', function() {
   console.log('socket2 connected');
 });
 
-socket2.on('chat', function(data) {
+socket2.on(user_token, function(data) {
   //shoot일 때 카메라 직접 촬영
   if (data == "shoot") {
     console.log('client camera shoot');
@@ -247,7 +247,9 @@ socket2.on('chat', function(data) {
   }
   //데이터베이스 설정 재연결
   else {
-    console.log('web_socket : ' + data.msg + data.token);
+    console.log('user_token : ' + data.user_token);
+    console.log('api_key : ' + data.api_key);
+    console.log('msg : ' + data.msg);
     if (camera_interval != null) {
       clearInterval(camera_interval);
 
