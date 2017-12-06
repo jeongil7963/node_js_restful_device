@@ -140,7 +140,7 @@ function camera_setting(){
         timeInMs = moment().format('YYYYMMDDHHmmss');
         photo_path = __dirname + "/images/" + timeInMs + ".jpg";
         cmd_photo = 'raspistill -vf -t 1 -w 600 -h 420 -o ' + photo_path;
-        callback(null, 'camera_setting_complete');
+        callback(null);
       },
       function(callback) {
         exec_photo(cmd_photo, function(err, stdout, stderr) {
@@ -149,9 +149,8 @@ function camera_setting(){
             return;
           }
           console.log("photo captured with filename: " + timeInMs);
-          camera_sending();
         });
-        callback(null, 'camera_shooting_complete');
+        callback(null);
       },
       function(callback) {
         console.log("image trnasmit function call")
@@ -159,7 +158,10 @@ function camera_setting(){
       },
     ],
     function(err, result) {
-      console.log("camera shot complete")
+      if(err){
+        console.log(err);
+      }
+      console.log("camera shot complete : " + result)
     });
 }
 
