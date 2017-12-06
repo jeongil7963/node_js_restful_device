@@ -1,6 +1,7 @@
 //user_token
-var user_token = '839ca2c5d60342309677f6f65ffc809c'
-var api_key = '58a7ff45425f4d6d809c023ee1790aa2'
+var user_token = '839ca2c5d60342309677f6f65ffc809c';
+var api_key = '58a7ff45425f4d6d809c023ee1790aa2';
+var field_id = 3;
 
 var http = require('http');
 http.post = require('http-post');
@@ -12,7 +13,8 @@ var current_min; // 현재 시각 '분'
 var sub_min; // 촬영 시작 전 시간
 var camera_interval; // camera 모듈 반복 제어
 
-/*
+var async = require('async');
+
 
 //설정 및 촬영 소켓 모듈
 var socket2 = require('socket.io-client')('http://13.124.28.87:3000');
@@ -31,10 +33,11 @@ var client = mqtt.connect('mqtt://13.124.28.87'); // mqtt 서버 접속
 var http = require('http'); // http socket
 var delivery; // delivery 전역 설정
 var temp = {}; //소켓통신으로 이미지 파일을 서버로 전송
-//관수 모듈//
+
+//관수 모듈
 var GPIO = require('onoff').Gpio;
 var onoffcontroller = new GPIO(21, 'out');
-*/
+
 
 //수분 측정 모듈//
 var SerialPort = require('serialport'); //아두이노와 시리얼 통신할 수 있는 모듈
@@ -69,8 +72,6 @@ http.post('http://192.168.0.6:3000/setting/search', {
 
   });
 });
-
-/*
 
 //통신 후 db 재설정 및 카메라 모듈 재시작
 function rederection() {
@@ -114,6 +115,7 @@ function module_start() {
   }, 1000 * 60 * sub_min); // 제한된 시간 후에 촬영 시작
 };
 
+
 //소켓 연결 및 전송 모듈 설정
 socket.on('connect', function() {
   console.log("Socket1 connected");
@@ -127,45 +129,51 @@ socket.on('connect', function() {
   });
 });
 
+
 // 카메라 설정 시간 간격 마다 촬영 실행
 function camera_starting() {
   camera_setting(); // 처음 한번 촬영
   camera_interval = setInterval(camera_setting, 1000 * 60 * shooting_time); // 설정 시간 후에 반복 촬영
 };
 
-// 현재 시간으로 카메라 설정 세팅
-function camera_setting() {
-  timeInMs = moment().format('YYYYMMDDHHmmss');
-  photo_path = __dirname + "/images/" + timeInMs + ".jpg";
-  cmd_photo = 'raspistill -vf -t 1 -w 600 -h 420 -o ' + photo_path;
-  setTimeout(() => {
-    camera_shooting();
-  }, 500);
-};
-
-// 설정된 값으로 카메라 촬영
-function camera_shooting() {
-  exec_photo(cmd_photo, function(err, stdout, stderr) {
-    if (err) {
-      console.log('child process exited with shooting_photo error code', err.code);
-      return;
-    }
-    console.log("photo captured with filename: " + timeInMs);
-    camera_sending();
-  });
+function camera_setting(){
+  async.waterfall([
+      function(callback) {
+        timeInMs = moment().format('YYYYMMDDHHmmss');
+        photo_path = __dirname + "/images/" + timeInMs + ".jpg";
+        cmd_photo = 'raspistill -vf -t 1 -w 600 -h 420 -o ' + photo_path;
+        callback(null, 'camera_setting_complete');
+      },
+      function(callback) {
+        console.log(arg1)
+        exec_photo(cmd_photo, function(err, stdout, stderr) {
+          if (err) {
+            console.log('child process exited with shooting_photo error code', err.code);
+            return;
+          }
+          console.log("photo captured with filename: " + timeInMs);
+          camera_sending();
+        });
+        callback(null, 'camera_shooting_complete');
+      },
+      function(callback) {
+        console.log(arg1)
+        delivery.send({
+          name: timeInMs,
+          path: __dirname + '/images/' + timeInMs + ".jpg",
+          params: {
+            channel: field_id,
+            img_name: timeInMs + ".jpg"
+          }
+        });
+      },
+    ],
+    function(err, result) {
+      console.log("camera shot complete")
+    });
 }
 
-// 촬영 이미지 전송
-function camera_sending() {
-  delivery.send({
-    name: timeInMs,
-    path: __dirname + '/images/' + timeInMs + ".jpg",
-    params: {
-      channel: field_id,
-      img_name: timeInMs + ".jpg"
-    }
-  });
-};
+/*
 
 // 관수
 // MQTT pub/sub
@@ -204,7 +212,6 @@ function watering_stop() {
     onoffcontroller.writeSync(0);
   }, water_stop_time * 1000);
 };
-
 */
 
 // 수분 측정
