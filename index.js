@@ -65,7 +65,7 @@ http.post('http://192.168.0.6:3000/setting/search', {
       water_stop_time = resObj.ras_watering_operatingtime;
       shooting_time = resObj.ras_camera_operatingtime;
       module_start();
-      console.console.log("camera_start");
+      console.log("camera_start");
     } else {
       console.log('user_token or api_key are wrong');
     }
