@@ -143,7 +143,6 @@ function camera_setting(){
         callback(null, 'camera_setting_complete');
       },
       function(callback) {
-        console.log(arg1)
         exec_photo(cmd_photo, function(err, stdout, stderr) {
           if (err) {
             console.log('child process exited with shooting_photo error code', err.code);
