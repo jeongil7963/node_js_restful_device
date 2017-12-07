@@ -165,46 +165,6 @@ function camera_setting(){
     });
 }
 
-/*
-// 관수
-// MQTT pub/sub
-client.on('connect', function() {
-  client.subscribe('/' + field_id + '/onoff');
-});
-
-//callback
-client.on('message', function(topic, message) {
-  // message is Buffer
-  console.log(message.toString());
-  if (message.toString() === '1') {
-    console.log('watering on');
-    onoffcontroller.writeSync(1);
-    watering_stop();
-  } else if (message.toString() === '0') {
-    console.log('watering off');
-    onoffcontroller.writeSync(0);
-  } else {
-    console.log('watering error ');
-    var error_time = new Date.toString();
-    var get_message = message.toString();
-    var error_temp = {
-      error_time: get_message
-    };
-    temp.add(error_temp);
-  }
-  //port.write(message.toString(), function(err) {});
-});
-
-// 설정된 시간으로 관수 정지
-function watering_stop() {
-  setTimeout(() => {
-    console.log('water_stop_time : ' + water_stop_time);
-    console.log('watering off');
-    onoffcontroller.writeSync(0);
-  }, water_stop_time * 1000);
-};
-*/
-
 // 수분 측정
 port.pipe(parser);
 //포트 열기
@@ -240,26 +200,44 @@ socket2.on('connect', function() {
 });
 
 socket2.on(user_token, function(data) {
-  //shoot일 때 카메라 직접 촬영
-  if (data == "shoot") {
-    console.log('client camera shoot');
-    camera_setting();
-  }
-  //데이터베이스 설정 재연결
-  else {
     console.log('user_token : ' + data.user_token);
     console.log('api_key : ' + data.api_key);
     console.log('msg : ' + data.msg);
-    if (camera_interval != null) {
-      clearInterval(camera_interval);
-
-    } else {
-      console.log('camera setting before starting shot')
+  if( data.api_key == api_key && data.user_token == user_token){
+    if(data.msg == "shoot"){
+      //shoot일 때 카메라 직접 촬영
+      camera_setting();
     }
-    rederection();
+    else if(data.msg == "option"){
+      //옵션 재설정
+      if (camera_interval != null) {
+        clearInterval(camera_interval);
+      } else {
+        console.log('camera setting before starting shot')
+      }
+      rederection();
+    }
+    else if(data.msg == "water_start"){
+      onoffcontroller.writeSync(1);
+      watering_stop();
+    }
+    else if(data.msg == "water_stop"){
+      console.log('watering off');
+      onoffcontroller.writeSync(0);
+    }
   }
+
 });
 
 socket2.on('disconnect', function() {
   console.log('socket2 disconnected');
 });
+
+// 설정된 시간으로 관수 정지
+function watering_stop() {
+  setTimeout(() => {
+    console.log('water_stop_time : ' + water_stop_time);
+    console.log('watering off');
+    onoffcontroller.writeSync(0);
+  }, water_stop_time * 1000);
+};
