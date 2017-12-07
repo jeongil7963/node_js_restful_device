@@ -234,6 +234,18 @@ function watering_stop() {
     console.log('water_stop_time : ' + water_stop_time);
     console.log('watering off');
     onoffcontroller.writeSync(0);
+    http.post('http://192.168.0.6:3000/watering', {
+      "user_token": user_token,
+      "api_key": api_key,
+      "wc_type": 'stop',
+      "wc_operatingtime": water_stop_time
+    }, function(res) {
+      res.setEncoding('utf8');
+      res.on('data', function(res) {
+        var resObj = JSON.parse(res);
+        console.log(resObj);
+      });
+    });
   }, water_stop_time * 1000);
 };
 
