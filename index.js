@@ -231,7 +231,7 @@ socket2.on(user_token, function(data) {
           console.log(resObj);
         });
       });
-      socket.emit(user_token, 'stop');
+      socket2.emit(user_token, 'stop');
     }
   }
 
