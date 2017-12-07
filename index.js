@@ -214,6 +214,7 @@ socket2.on(user_token, function(data) {
       rederection();
     } else if (data.msg == "water_start") {
       onoffcontroller.writeSync(1);
+      watering_insert();
       watering_stop();
     } else if (data.msg == "water_stop") {
       console.log('watering off');
