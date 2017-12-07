@@ -242,6 +242,7 @@ function watering_insert() {
   http.post('http://192.168.0.6:3000/watering', {
     "user_token": user_token,
     "api_key": api_key,
+    "wc_type": 'start',
     "wc_operatingtime": water_stop_time
   }, function(res) {
     res.setEncoding('utf8');
