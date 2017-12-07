@@ -24,12 +24,9 @@ var exec_photo = require('child_process').exec;
 var photo_path;
 var cmd_photo;
 
-//var socket = require('socket.io-client')('http://13.124.28.87:5001'); // 소켓서버에 연결
 //var dl = require('delivery'); // 파일 전송 모듈
 var moment = require('moment'); // moment 시간 모듈
-//var mqtt = require('mqtt'); // mqtt 모듈
-//var client = mqtt.connect('mqtt://13.124.28.87'); // mqtt 서버 접속
-//var http = require('http'); // http socket
+
 //var delivery; // delivery 전역 설정
 //var temp = {}; //소켓통신으로 이미지 파일을 서버로 전송
 
@@ -134,7 +131,7 @@ function camera_starting() {
   camera_interval = setInterval(camera_setting, 1000 * 60 * shooting_time); // 설정 시간 후에 반복 촬영
 };
 
-function camera_setting(){
+function camera_setting() {
   async.waterfall([
       function(callback) {
         timeInMs = moment().format('YYYYMMDDHHmmss');
@@ -142,7 +139,7 @@ function camera_setting(){
         cmd_photo = 'raspistill -vf -t 1 -w 600 -h 420 -o ' + photo_path;
         callback(null, '1');
       },
-      function(arg, callback ) {
+      function(arg, callback) {
         exec_photo(cmd_photo, function(err, stdout, stderr) {
           if (err) {
             console.log('child process exited with shooting_photo error code', err.code);
@@ -158,7 +155,7 @@ function camera_setting(){
       }
     ],
     function(err, result) {
-      if(err){
+      if (err) {
         console.log(err);
       }
       console.log("camera shot complete : " + result)
@@ -200,15 +197,14 @@ socket2.on('connect', function() {
 });
 
 socket2.on(user_token, function(data) {
-    console.log('user_token : ' + data.user_token);
-    console.log('api_key : ' + data.api_key);
-    console.log('msg : ' + data.msg);
-  if( data.api_key == api_key && data.user_token == user_token){
-    if(data.msg == "shoot"){
+  console.log('user_token : ' + data.user_token);
+  console.log('api_key : ' + data.api_key);
+  console.log('msg : ' + data.msg);
+  if (data.api_key == api_key && data.user_token == user_token) {
+    if (data.msg == "shoot") {
       //shoot일 때 카메라 직접 촬영
       camera_setting();
-    }
-    else if(data.msg == "option"){
+    } else if (data.msg == "option") {
       //옵션 재설정
       if (camera_interval != null) {
         clearInterval(camera_interval);
@@ -216,12 +212,10 @@ socket2.on(user_token, function(data) {
         console.log('camera setting before starting shot')
       }
       rederection();
-    }
-    else if(data.msg == "water_start"){
+    } else if (data.msg == "water_start") {
       onoffcontroller.writeSync(1);
       watering_stop();
-    }
-    else if(data.msg == "water_stop"){
+    } else if (data.msg == "water_stop") {
       console.log('watering off');
       onoffcontroller.writeSync(0);
     }
@@ -240,4 +234,19 @@ function watering_stop() {
     console.log('watering off');
     onoffcontroller.writeSync(0);
   }, water_stop_time * 1000);
+};
+
+// rest_api에 관수 시간 삽입
+function watering_insert() {
+  http.post('http://192.168.0.6:3000/watering', {
+    "user_token": user_token,
+    "api_key": api_key,
+    "wc_operatingtime": water_stop_time
+  }, function(res) {
+    res.setEncoding('utf8');
+    res.on('data', function(res) {
+      var resObj = JSON.parse(res);
+      console.log(resObj);
+    });
+  });
 };
