@@ -16,7 +16,8 @@ var camera_interval; // camera 모듈 반복 제어
 var async = require('async');
 
 //설정 및 촬영 소켓 모듈
-var socket2 = require('socket.io-client')('http://192.168.0.6:5000');
+//var socket2 = require('socket.io-client')('http://192.168.0.6:5000');
+var socket2 = io('http://192.168.0.6:5000');
 
 //카메라 사용자 촬영 설정
 var timeInMs;
