@@ -219,6 +219,19 @@ socket2.on(user_token, function(data) {
     } else if (data.msg == "water_stop") {
       console.log('watering off');
       onoffcontroller.writeSync(0);
+      http.post('http://192.168.0.6:3000/watering', {
+        "user_token": user_token,
+        "api_key": api_key,
+        "wc_type": 'stop',
+        "wc_operatingtime": water_stop_time
+      }, function(res) {
+        res.setEncoding('utf8');
+        res.on('data', function(res) {
+          var resObj = JSON.parse(res);
+          console.log(resObj);
+        });
+      });
+      socket.emit(user_token, 'stop');
     }
   }
 
