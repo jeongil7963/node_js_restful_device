@@ -8,6 +8,7 @@ http.post = require('http-post');
 var async = require('async');
 
 var fs = require("fs"); //Load the filesystem module
+var path =  require('path');
 
 //option 설정
 var config = require('./config.json');
@@ -42,6 +43,10 @@ var port = new SerialPort('/dev/ttyACM0', {
   baudRate: 9600
 });
 
+var imgFolder = path.resolve(__dirname );
+var postFolder = path.resolve(__dirname + '/post');
+var folderArr = ['images'];
+
 // user_token, api_key 유효성 검사
 // 설정 시간 받기
 http.post('http://192.168.0.6:3000/setting/search', {
@@ -56,6 +61,7 @@ http.post('http://192.168.0.6:3000/setting/search', {
       console.log(resObj);
       water_stop_time = resObj.ras_watering_operatingtime;
       shooting_time = resObj.ras_camera_operatingtime;
+      arryCreateFolder(postFolder, folderArr);
       module_start();
       console.log("camera_start");
     } else {
@@ -63,6 +69,55 @@ http.post('http://192.168.0.6:3000/setting/search', {
     }
   });
 });
+
+
+
+// 이런식으로 사용하면 된다.
+
+/* 배열로 된 폴더명을 받아서 하위폴더를 구성해준다. -- main */
+function arryCreateFolder(imgFolder, folderArr){
+	var nFolder = imgFolder;
+	for( folder in folderArr ){
+		var status = searchFolder(nFolder, folderArr[folder]);
+		if(!status){
+			var createStatus = createFolder(nFolder, folderArr[folder]);
+			nFolder = path.join(nFolder, folderArr[folder]);
+		}
+	}
+}
+
+// 폴더를 생성하는 역할을 맡는다.
+function createFolder(folder, createFolder){
+	var tgFolder = path.join(folder,createFolder);
+	console.log("createFolder ==> " + tgFolder);
+	fs.mkdir(tgFolder, 0666, function(err){
+		if(err){
+			return false;
+		}else{
+			console.log('create newDir');
+			return true;
+		}
+	});
+}
+
+// 폴더가 존재하는지 찾는다. 있다면 폴더위치를 리턴하고, 없다면 false를 리턴한다.
+function searchFolder(folder, srhFolder){
+	var rtnFolder;
+	fs.readdir(folder, function (err, files) {
+		if(err) throw err;
+		files.forEach(function(file){
+			if(file == srhFolder){
+				fs.stat(path.join(folder, file), function(err, stats){
+					if(stats.isDirectory()){
+						return path.join(folder, file);
+					}
+				});
+			}
+		});
+	});
+	return false;
+}
+
 
 //통신 후 db 재설정 및 카메라 모듈 재시작
 function rederection() {
