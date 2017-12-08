@@ -181,7 +181,7 @@ function camera_setting() {
       },
       function(arg, callback) {
         var stats = fs.statSync(photo_path);
-        var ci_imgsize = (stats.size)/1024;
+        var ci_imgsize = stats.size;
         console.log("image trnasmit function call")
         http.post('http://192.168.0.6:3000/camera', {
           "user_token": user_token,
