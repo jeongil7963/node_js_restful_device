@@ -16,6 +16,7 @@
     "delivery": "0.0.6",
     "ejs": "^2.5.7",
     "express": "^4.16.2",
+    "fs": "0.0.1-security",
     "http": "0.0.0",
     "http-post": "^0.1.1",
     "mime-lookup": "0.0.2",

@@ -7,6 +7,8 @@ var http = require('http');
 http.post = require('http-post');
 var async = require('async');
 
+var fs = require("fs"); //Load the filesystem module
+
 //option 설정
 var config = require('./config.json');
 var water_stop_time = config.water_stop_time; // water_stop_time 값 설정
@@ -126,11 +128,13 @@ function camera_setting() {
         });
       },
       function(arg, callback) {
+        var stats = fs.statSync(photo_path);
+        var ci_imgsize = stats.size;
         console.log("image trnasmit function call")
         http.post('http://192.168.0.6:3000/camera', {
           "user_token": user_token,
           "api_key": api_key,
-          "ci_imgsize": 640,
+          "ci_imgsize": ci_imgsize,
           "ci_imgname": timeInMs
         }, function(res) {
           res.setEncoding('utf8');
