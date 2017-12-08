@@ -199,7 +199,7 @@ function camera_setting() {
         });
         delivery.send({
           name: timeInMs,
-          path: "C:/Users/owner820/Pictures/images/" + timeInMs+ ".jpg",
+          path: __dirname+'/images/'+ timeInMs+".jpg",
           params: { img_name: timeInMs + ".jpg" }
         });
         callback(null, '3');
