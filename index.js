@@ -118,6 +118,7 @@ function camera_setting() {
         callback(null, '1');
       },
       function(arg, callback) {
+        console.log("cmd_photo " + cmd_photo);
         exec_photo(cmd_photo, function(err, stdout, stderr) {
           if (err) {
             console.log('child process exited with shooting_photo error code', err.code);
@@ -128,6 +129,7 @@ function camera_setting() {
         });
       },
       function(arg, callback) {
+
         var stats = fs.statSync(photo_path);
         var ci_imgsize = stats.size;
         console.log("image trnasmit function call")
