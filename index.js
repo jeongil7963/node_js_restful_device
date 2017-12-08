@@ -129,7 +129,7 @@ function camera_setting() {
         });
       },
       function(arg, callback) {
-
+        /*
         var stats = fs.statSync(photo_path);
         var ci_imgsize = stats.size;
         console.log("image trnasmit function call")
@@ -145,6 +145,7 @@ function camera_setting() {
             console.log(resObj);
           });
         });
+          */
         callback(null, '3');
       }
     ],
