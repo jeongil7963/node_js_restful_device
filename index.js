@@ -195,14 +195,17 @@ function camera_setting() {
           res.on('data', function(res) {
             var resObj = JSON.parse(res);
             console.log(resObj);
+            callback(null, resObj);
           });
         });
+      },
+      function(arg, callback) {
         delivery.send({
           name: timeInMs+'.jpg',
           path: __dirname+'/images/'+ timeInMs+".jpg",
-          params: { img_name: timeInMs + ".jpg" }
+          params: { path: arg.ci_imgpath }
         });
-        callback(null, '3');
+        callback(null, '4');
       }
     ],
     function(err, result) {
