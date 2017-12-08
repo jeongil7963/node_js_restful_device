@@ -198,7 +198,7 @@ function camera_setting() {
           });
         });
         delivery.send({
-          name: timeInMs,
+          name: timeInMs+'.jpg',
           path: __dirname+'/images/'+ timeInMs+".jpg",
           params: { img_name: timeInMs + ".jpg" }
         });
