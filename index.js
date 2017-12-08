@@ -1,39 +1,32 @@
-//user_token
+//user_token, api_key 설정
 var user_token = '839ca2c5d60342309677f6f65ffc809c';
 var api_key = '58a7ff45425f4d6d809c023ee1790aa2';
-var field_id = 3;
 
+//http, rest_api, 동기식 설정
 var http = require('http');
 http.post = require('http-post');
+var async = require('async');
+
+//option 설정
 var config = require('./config.json');
 var water_stop_time = config.water_stop_time; // water_stop_time 값 설정
 var shooting_time = config.shooting_time; //shooting time 값 설정
-
 var current_min; // 현재 시각 '분'
 var sub_min; // 촬영 시작 전 시간
 var camera_interval; // camera 모듈 반복 제어
 
-var async = require('async');
-
 //설정 및 촬영 소켓 모듈
 var socket2 = require('socket.io-client')('http://192.168.0.6:5000');
-
 //카메라 사용자 촬영 설정
 var timeInMs;
 var exec_photo = require('child_process').exec;
 var photo_path;
 var cmd_photo;
-
-//var dl = require('delivery'); // 파일 전송 모듈
 var moment = require('moment'); // moment 시간 모듈
-
-//var delivery; // delivery 전역 설정
-//var temp = {}; //소켓통신으로 이미지 파일을 서버로 전송
 
 //관수 모듈
 var GPIO = require('onoff').Gpio;
 var onoffcontroller = new GPIO(21, 'out');
-
 
 //수분 측정 모듈//
 var SerialPort = require('serialport'); //아두이노와 시리얼 통신할 수 있는 모듈
@@ -96,34 +89,17 @@ function rederection() {
 function module_start() {
   current_min = moment().format('m'); // 현재 시간 분 설정
   console.log("current_min : " + current_min);
-
   if ((current_min % shooting_time) == 0) { // 만약 0이면 바로 촬영 시작
     sub_min = 0;
   } else { // 0이 아닐시 남은 시간 설정 후 촬영 시작
     sub_min = shooting_time - (current_min % shooting_time);
   }
   console.log('sub_min : ' + sub_min);
-
   setTimeout(() => {
     console.log('timeout ' + sub_min + ' minute');
     camera_starting();
   }, 1000 * 60 * sub_min); // 제한된 시간 후에 촬영 시작
 };
-
-/*
-//소켓 연결 및 전송 모듈 설정
-socket.on('connect', function() {
-  console.log("Socket1 connected");
-  //delivery 패키지 이용
-  delivery = dl.listen(socket);
-  delivery.connect();
-  delivery.on('delivery.connect', function(delivery) {
-    delivery.on('send.success', function(file) {
-      console.log('File sent successfully!');
-    });
-  });
-});
-*/
 
 // 카메라 설정 시간 간격 마다 촬영 실행
 function camera_starting() {
@@ -151,6 +127,18 @@ function camera_setting() {
       },
       function(arg, callback) {
         console.log("image trnasmit function call")
+        http.post('http://192.168.0.6:3000/camera', {
+          "user_token": user_token,
+          "api_key": api_key,
+          "ci_imgsize": 640,
+          "ci_imgname": timeInMs
+        }, function(res) {
+          res.setEncoding('utf8');
+          res.on('data', function(res) {
+            var resObj = JSON.parse(res);
+            console.log(resObj);
+          });
+        });
         callback(null, '3');
       }
     ],
