@@ -8,7 +8,7 @@ http.post = require('http-post');
 var async = require('async');
 
 var fs = require("fs"); //Load the filesystem module
-var path =  require('path');
+var path = require('path');
 
 //option 설정
 var config = require('./config.json');
@@ -19,6 +19,8 @@ var sub_min; // 촬영 시작 전 시간
 var camera_interval; // camera 모듈 반복 제어
 
 //설정 및 촬영 소켓 모듈
+var dl = require('delivery');
+
 var socket2 = require('socket.io-client')('http://192.168.0.6:5000');
 //카메라 사용자 촬영 설정
 var timeInMs;
@@ -43,8 +45,8 @@ var port = new SerialPort('/dev/ttyACM0', {
   baudRate: 9600
 });
 
-var imgFolder = path.resolve(__dirname );
-var postFolder = path.resolve(__dirname );
+var imgFolder = path.resolve(__dirname);
+var postFolder = path.resolve(__dirname);
 var folderArr = ['images'];
 
 // user_token, api_key 유효성 검사
@@ -71,47 +73,47 @@ http.post('http://192.168.0.6:3000/setting/search', {
 });
 
 /* 배열로 된 폴더명을 받아서 하위폴더를 구성해준다. -- main */
-function arryCreateFolder(imgFolder, folderArr){
-	var nFolder = imgFolder;
-	for( folder in folderArr ){
-		var status = searchFolder(nFolder, folderArr[folder]);
-		if(!status){
-			var createStatus = createFolder(nFolder, folderArr[folder]);
-			nFolder = path.join(nFolder, folderArr[folder]);
-		}
-	}
+function arryCreateFolder(imgFolder, folderArr) {
+  var nFolder = imgFolder;
+  for (folder in folderArr) {
+    var status = searchFolder(nFolder, folderArr[folder]);
+    if (!status) {
+      var createStatus = createFolder(nFolder, folderArr[folder]);
+      nFolder = path.join(nFolder, folderArr[folder]);
+    }
+  }
 }
 
 // 폴더를 생성하는 역할을 맡는다.
-function createFolder(folder, createFolder){
-	var tgFolder = path.join(folder,createFolder);
-	console.log("createFolder ==> " + tgFolder);
-	fs.mkdir(tgFolder, 0777, function(err){
-		if(err){
-			return false;
-		}else{
-			console.log('create newDir');
-			return true;
-		}
-	});
+function createFolder(folder, createFolder) {
+  var tgFolder = path.join(folder, createFolder);
+  console.log("createFolder ==> " + tgFolder);
+  fs.mkdir(tgFolder, 0777, function(err) {
+    if (err) {
+      return false;
+    } else {
+      console.log('create newDir');
+      return true;
+    }
+  });
 }
 
 // 폴더가 존재하는지 찾는다. 있다면 폴더위치를 리턴하고, 없다면 false를 리턴한다.
-function searchFolder(folder, srhFolder){
-	var rtnFolder;
-	fs.readdir(folder, function (err, files) {
-		if(err) throw err;
-		files.forEach(function(file){
-			if(file == srhFolder){
-				fs.stat(path.join(folder, file), function(err, stats){
-					if(stats.isDirectory()){
-						return path.join(folder, file);
-					}
-				});
-			}
-		});
-	});
-	return false;
+function searchFolder(folder, srhFolder) {
+  var rtnFolder;
+  fs.readdir(folder, function(err, files) {
+    if (err) throw err;
+    files.forEach(function(file) {
+      if (file == srhFolder) {
+        fs.stat(path.join(folder, file), function(err, stats) {
+          if (stats.isDirectory()) {
+            return path.join(folder, file);
+          }
+        });
+      }
+    });
+  });
+  return false;
 }
 
 
@@ -195,6 +197,11 @@ function camera_setting() {
             console.log(resObj);
           });
         });
+        delivery.send({
+          name: timeInMs,
+          path: "C:/Users/owner820/Pictures/images/" + timeInMs+ ".jpg",
+          params: { img_name: timeInMs + ".jpg" }
+        });
         callback(null, '3');
       }
     ],
@@ -238,6 +245,15 @@ parser.on('data', function(data) {
 // 소켓 연결
 socket2.on('connect', function() {
   console.log('socket2 connected');
+  delivery = dl.listen(socket2);
+  delivery.connect();
+
+  delivery.on('delivery.connect', function(delivery) {
+
+    delivery.on('send.success', function(file) {
+      console.log('File sent successfully!');
+    });
+  });
 });
 
 socket2.on(user_token, function(data) {
@@ -276,10 +292,10 @@ socket2.on(user_token, function(data) {
         });
       });
       var obj = {
-				user_token : "839ca2c5d60342309677f6f65ffc809c",
-				api_key : "58a7ff45425f4d6d809c023ee1790aa2",
-				msg : "water_stop_time"
-			};
+        user_token: "839ca2c5d60342309677f6f65ffc809c",
+        api_key: "58a7ff45425f4d6d809c023ee1790aa2",
+        msg: "water_stop_time"
+      };
       socket2.emit(user_token, obj);
     }
   }
