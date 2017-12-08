@@ -125,8 +125,8 @@ function camera_setting() {
             return;
           }
           console.log("photo captured with filename: " + timeInMs);
-          
         });
+        callback(null, '2');
       },
       function(arg, callback) {
 
