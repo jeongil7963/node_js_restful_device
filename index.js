@@ -44,7 +44,7 @@ var port = new SerialPort('/dev/ttyACM0', {
 });
 
 var imgFolder = path.resolve(__dirname );
-var postFolder = path.resolve(__dirname + '/post');
+var postFolder = path.resolve(__dirname );
 var folderArr = ['images'];
 
 // user_token, api_key 유효성 검사
