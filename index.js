@@ -70,10 +70,6 @@ http.post('http://192.168.0.6:3000/setting/search', {
   });
 });
 
-
-
-// 이런식으로 사용하면 된다.
-
 /* 배열로 된 폴더명을 받아서 하위폴더를 구성해준다. -- main */
 function arryCreateFolder(imgFolder, folderArr){
 	var nFolder = imgFolder;
@@ -90,7 +86,7 @@ function arryCreateFolder(imgFolder, folderArr){
 function createFolder(folder, createFolder){
 	var tgFolder = path.join(folder,createFolder);
 	console.log("createFolder ==> " + tgFolder);
-	fs.mkdir(tgFolder, 0666, function(err){
+	fs.mkdir(tgFolder, 0777, function(err){
 		if(err){
 			return false;
 		}else{
