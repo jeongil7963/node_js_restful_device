@@ -177,7 +177,7 @@ function camera_setting() {
         cmd_photo += Horizontal;
         cmd_photo += ' -br ' + brightness;
         cmd_photo += ' -sa ' + saturation;
-        //cmd_photo += ' -ISO ' + iso;
+        cmd_photo += ' -ISO ' + iso;
         cmd_photo += ' -co ' + contrast;
         cmd_photo += ' -t 1 -w 1600 -h 900 -o ' + photo_path;
         callback(null, '1');
