@@ -172,12 +172,12 @@ function camera_setting() {
       function(callback) {
         timeInMs = moment().format('YYYYMMDDHHmmss');
         photo_path = __dirname + "/images/" + timeInMs + ".jpg";
-        cmd_photo = 'raspistill ';
+        cmd_photo = 'raspistill';
         cmd_photo += Vertical;
         cmd_photo += Horizontal;
         cmd_photo += ' -br ' + brightness;
         cmd_photo += ' -sa ' + saturation;
-        cmd_photo += ' -ISO ' + iso;
+        //cmd_photo += ' -ISO ' + iso;
         cmd_photo += ' -co ' + contrast;
         cmd_photo += ' -t 1 -w 1600 -h 900 -o ' + photo_path;
         callback(null, '1');
