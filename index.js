@@ -2,11 +2,10 @@
 var user_token = '839ca2c5d60342309677f6f65ffc809c';
 var api_key = '58a7ff45425f4d6d809c023ee1790aa2';
 
-//http, rest_api, 동기식 설정
+
 var http = require('http');
 http.post = require('http-post');
 var async = require('async');
-
 var fs = require("fs"); //Load the filesystem module
 var path = require('path');
 
@@ -20,8 +19,8 @@ var camera_interval; // camera 모듈 반복 제어
 
 //설정 및 촬영 소켓 모듈
 var dl = require('delivery');
-
 var socket2 = require('socket.io-client')('http://192.168.0.6:5000');
+
 //카메라 사용자 촬영 설정
 var timeInMs;
 var exec_photo = require('child_process').exec;
@@ -51,14 +50,13 @@ var folderArr = ['images'];
 
 // user_token, api_key 유효성 검사
 // 설정 시간 받기
-http.post('http://192.168.0.6:3000/setting/search', {
+http.post('http://192.168.0.6:3000/device', {
   "user_token": user_token,
   "api_key": api_key
 }, function(res) {
   res.setEncoding('utf8');
   res.on('data', function(res) {
     var resObj = JSON.parse(res);
-
     if (resObj.resultmsg == 'setting search success') {
       console.log(resObj);
       water_stop_time = resObj.ras_watering_operatingtime;
@@ -121,7 +119,7 @@ function searchFolder(folder, srhFolder) {
 function rederection() {
   // user_token, api_key 유효성 검사
   // 설정 시간 받기
-  http.post('http://192.168.0.6:3000/setting/search', {
+  http.post('http://192.168.0.6:3000/device', {
     "user_token": user_token,
     "api_key": api_key
   }, function(res) {
@@ -185,7 +183,7 @@ function camera_setting() {
         var stats = fs.statSync(photo_path);
         var ci_imgsize = stats.size;
         console.log("image trnasmit function call")
-        http.post('http://192.168.0.6:3000/camera', {
+        http.post('http://192.168.0.6:3000/device/camera', {
           "user_token": user_token,
           "api_key": api_key,
           "ci_imgsize": ci_imgsize,
@@ -201,9 +199,11 @@ function camera_setting() {
       },
       function(arg, callback) {
         delivery.send({
-          name: timeInMs+'.jpg',
-          path: __dirname+'/images/'+ timeInMs+".jpg",
-          params: { path: arg.ci_imgpath }
+          name: timeInMs + '.jpg',
+          path: __dirname + '/images/' + timeInMs + ".jpg",
+          params: {
+            path: arg.ci_imgpath
+          }
         });
         callback(null, '4');
       }
@@ -230,7 +230,7 @@ port.on('error', function(err) {
 parser.on('data', function(data) {
   console.log('Read and Send Data : ' + data);
   var sensorObj = data.toString(); // json 형식 data를 객체형식으로 저장
-  http.post('http://192.168.0.6:3000/insert', {
+  http.post('http://192.168.0.6:3000/device/moisture', {
     "user_token": user_token,
     "api_key": api_key,
     "sv_sensor1": sensorObj
@@ -282,7 +282,7 @@ socket2.on(user_token, function(data) {
     } else if (data.msg == "water_stop") {
       console.log('watering off');
       onoffcontroller.writeSync(0);
-      http.post('http://192.168.0.6:3000/watering', {
+      http.post('http://192.168.0.6:3000/device/watering', {
         "user_token": user_token,
         "api_key": api_key,
         "wc_type": 'stop',
@@ -315,7 +315,7 @@ function watering_stop() {
     console.log('water_stop_time : ' + water_stop_time);
     console.log('watering off');
     onoffcontroller.writeSync(0);
-    http.post('http://192.168.0.6:3000/watering', {
+    http.post('http://192.168.0.6:3000/device/watering', {
       "user_token": user_token,
       "api_key": api_key,
       "wc_type": 'stop',
@@ -332,7 +332,7 @@ function watering_stop() {
 
 // rest_api에 관수 시간 삽입
 function watering_insert() {
-  http.post('http://192.168.0.6:3000/watering', {
+  http.post('http://192.168.0.6:3000/device/watering', {
     "user_token": user_token,
     "api_key": api_key,
     "wc_type": 'start',
