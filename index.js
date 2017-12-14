@@ -32,7 +32,7 @@ var Horizontal = ""; // 수평
 var Vertical = ""; // 수직
 var brightness = "50"; // 밝기
 var saturation = "0"; // 채도
-var iso  = "100"; // 감도
+var iso  = "400"; // 감도
 var contrast = "0"; //명암
 
 //관수 모듈
@@ -175,12 +175,10 @@ function camera_setting() {
         cmd_photo = 'raspistill ';
         cmd_photo += Vertical;
         cmd_photo += Horizontal;
-/*
         cmd_photo += ' -br ' + brightness;
         cmd_photo += ' -sa ' + saturation;
         cmd_photo += ' -ISO ' + iso;
         cmd_photo += ' -co ' + contrast;
-*/
         cmd_photo += ' -t 1 -w 1600 -h 900 -o ' + photo_path;
         callback(null, '1');
       },
