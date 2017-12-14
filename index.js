@@ -32,7 +32,6 @@ var Horizontal = ""; // 수평
 var Vertical = ""; // 수직
 var brightness = "50"; // 밝기
 var saturation = "0"; // 채도
-var iso  = "400"; // 감도
 var contrast = "0"; //명암
 
 //관수 모듈
