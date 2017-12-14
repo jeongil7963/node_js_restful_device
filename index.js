@@ -28,6 +28,13 @@ var photo_path;
 var cmd_photo;
 var moment = require('moment'); // moment 시간 모듈
 
+var Horizontal = ""; // 수평
+var Vertical = ""; // 수직
+var brightness = "50"; // 밝기
+var saturation = "0"; // 채도
+var iso  = "100"; // 감도
+var contrast = "0"; //명암
+
 //관수 모듈
 var GPIO = require('onoff').Gpio;
 var onoffcontroller = new GPIO(21, 'out');
@@ -165,7 +172,14 @@ function camera_setting() {
       function(callback) {
         timeInMs = moment().format('YYYYMMDDHHmmss');
         photo_path = __dirname + "/images/" + timeInMs + ".jpg";
-        cmd_photo = 'raspistill -vf -t 1 -w 600 -h 420 -o ' + photo_path;
+        cmd_photo = 'raspistill ';
+        cmd_photo += Vertical;
+        cmd_photo += Horizontal;
+        cmd_photo += ' -br ' + brightness;
+        cmd_photo += ' -sa ' + saturation;
+        cmd_photo += ' -ISO ' + iso;
+        cmd_photo += ' -co ' + contrast;
+        cmd_photo += ' -t 1 -w 1600 -h 900 -ex auto -o ' + photo_path;
         callback(null, '1');
       },
       function(arg, callback) {
