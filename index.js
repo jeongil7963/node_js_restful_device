@@ -313,6 +313,7 @@ socket2.on(user_token, function(data) {
       };
       socket2.emit(user_token, obj);
     } else if(data.msg == "camera_option"){
+      console.log("new camera option");
       Horizontal = data.hr; // 수평
       Vertical = data.vr; // 수직
       brightness = data.br; // 밝기
