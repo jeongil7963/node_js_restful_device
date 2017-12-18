@@ -172,8 +172,8 @@ function camera_setting() {
         timeInMs = moment().format('YYYYMMDDHHmmss');
         photo_path = __dirname + "/images/" + timeInMs + ".jpg";
         cmd_photo = 'raspistill';
-        cmd_photo += Vertical;
-        cmd_photo += Horizontal;
+        cmd_photo += ' ' + Vertical;
+        cmd_photo += ' ' + Horizontal;
         cmd_photo += ' -br ' + brightness;
         cmd_photo += ' -sa ' + saturation;
         cmd_photo += ' -co ' + contrast;
