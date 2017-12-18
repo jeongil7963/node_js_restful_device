@@ -312,6 +312,12 @@ socket2.on(user_token, function(data) {
         msg: "water_stop_time"
       };
       socket2.emit(user_token, obj);
+    } else if(data.msg == "camera_option"){
+      Horizontal = data.hr; // 수평
+      Vertical = data.vr; // 수직
+      brightness = data.br; // 밝기
+      saturation = data.sa; // 채도
+      contrast = data.ct; //명암
     }
   }
 
