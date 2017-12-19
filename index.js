@@ -67,6 +67,11 @@ http.post('http://192.168.0.6:3000/device', {
       console.log(resObj);
       water_stop_time = resObj.ras_watering_operatingtime;
       shooting_time = resObj.ras_camera_operatingtime;
+      Horizontal = resObj.ras_horizontal;
+      Vertical = resObj.ras_vertical;
+      brightness = resObj.ras_brightness;
+      saturation = resObj.ras_saturation;
+      contrast = resObj.ras_contrast;
       arryCreateFolder(postFolder, folderArr);
       module_start();
       console.log("camera_start");
@@ -136,6 +141,11 @@ function rederection() {
         console.log(resObj);
         water_stop_time = resObj.ras_watering_operatingtime;
         shooting_time = resObj.ras_camera_operatingtime;
+        Horizontal = resObj.ras_horizontal;
+        Vertical = resObj.ras_vertical;
+        brightness = resObj.ras_brightness;
+        saturation = resObj.ras_saturation;
+        contrast = resObj.ras_contrast;
         module_start();
       } else {
         console.log('user_token or api_key are wrong');
